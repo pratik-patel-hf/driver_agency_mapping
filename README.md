@@ -27,7 +27,6 @@ This project automates the process of mapping driver codes to their respective a
 ├── .python-version
 ├── pyproject.toml
 ├── README.md
-├── requirements.txt
 ├── uv.lock
 ```
 
@@ -36,25 +35,24 @@ This project automates the process of mapping driver codes to their respective a
 1. **Python Version**  
    This project requires Python 3.12 (see [.python-version](.python-version)).
 
-2. **Install Dependencies**  
-   Install all required packages using [uv](https://github.com/astral-sh/uv):
+2. **Install [uv](https://github.com/astral-sh/uv)**  
+   If you don't have `uv` installed, install it with pip:
    ```sh
-   uv pip install -r requirements.txt
+   pip install uv
    ```
 
-3. **Google Service Account**  
+3. **Install Dependencies and Run**  
+   All dependencies are managed in `pyproject.toml` and `uv.lock`.  
+   To install dependencies and run the main script, simply use:
+   ```sh
+   uv run main/main.py
+   ```
+
+4. **Google Service Account**  
    Place your Google service account JSON key in the `config/` directory and update the path in [`config/credentials.py`](config/credentials.py) if necessary.
 
-4. **Snowflake Credentials**  
+5. **Snowflake Credentials**  
    The Snowflake connection uses SSO (`externalbrowser`). Make sure you have access and update credentials in [`config/credentials.py`](config/credentials.py) if needed.
-
-## Usage
-
-Run the main script to fetch data from Snowflake and update the Google Sheet:
-
-```sh
-python main/main.py
-```
 
 ## Configuration
 
