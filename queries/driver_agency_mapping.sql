@@ -149,6 +149,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'SUNMO' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt SUNMO'
         
         -- TOLAZ --
+        WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim TOLAZ'
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry'
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff TOLAZ'
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt TOLAZ'
@@ -169,13 +170,14 @@ driver_agency_mapping AS (
         WHEN driver_code_suffix = '_t_hf' THEN 'Trillium'
         WHEN driver_code_suffix = 't__hf' THEN 'Trillium'
 
-        -- NonPeriod driver_codes being marked as GIG
-        WHEN combined_dc NOT LIKE '%.' AND (carrier_code IN ('ROADIE','UBER')) THEN NULL
-        
         -- GIG --
+        WHEN combined_dc LIKE '%.' AND carrier_code = 'ROADIE' THEN 'GIG-ROADIE'
+        WHEN combined_dc LIKE '%.' AND carrier_code = 'UBER' THEN 'GIG-UBER'
+
+        -- NonPeriod driver_codes being marked as GIG
         WHEN combined_dc LIKE '%_hf' AND (carrier_code IN ('ROADIE','UBER')) THEN 'TestUser'
-        WHEN carrier_code = 'ROADIE' THEN 'GIG-ROADIE'
-        WHEN carrier_code = 'UBER' THEN 'GIG-UBER'
+        WHEN combined_dc NOT LIKE '%.' AND carrier_code = 'ROADIE' THEN 'GIG-ROADIE'
+        WHEN combined_dc NOT LIKE '%.' AND carrier_code = 'UBER' THEN 'GIG-UBER'
 
         -- Test User -- 
         WHEN driver_code = 'mcistandbydriver_01_hf' THEN 'TestUser'

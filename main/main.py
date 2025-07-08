@@ -15,7 +15,7 @@ from config.credentials import get_snowflake_connection, get_gspread_connection
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
-    format = '%(acdtime)s - %(name)s - %(levelname)s - %(message)s'
+    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 

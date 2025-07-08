@@ -1,7 +1,19 @@
+import sys
 import os
 import snowflake.connector
 import gspread
+from dotenv import load_dotenv
 
+# Add the project root to the Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project_root)
+
+
+dotenv_path = os.path.join(project_root, ".env")
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+google_service_account = os.getenv("GOOGLE_SERVICE_ACCOUNT")
 
 def get_snowflake_connection():
     # Create a connection object to our Snowflake instance
@@ -18,7 +30,5 @@ def get_snowflake_connection():
 
 
 def get_gspread_connection():
-    gc = gspread.service_account(filename=r'C:\Users\PratikPatel\Desktop\HFDN - Reporting\python\driver_agency_mapping\config\driver-inspection-report-4ec3b6478af2.json')
-    spreadsheet = gc.open("Driver Agency Mapping")
-    automated = spreadsheet.worksheet('automated')
+    gc = gspread.service_account(google_service_account)
     return gc
