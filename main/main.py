@@ -91,7 +91,7 @@ def main():
         logger.info("Starting Driver Mapping process")
         
         # Step 1: Fetch data from Snowflake
-        query_path = os.path.join(project_root, 'queries', 'driver_agency_mapping.sql')
+        query_path = os.path.join(project_root, 'queries', 'driver_agency_mapping_v2.sql')
         df = fetch_data_from_snowflake(query_path)
         
         # Step 2: Update Google Sheet

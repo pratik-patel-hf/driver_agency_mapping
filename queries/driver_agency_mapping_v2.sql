@@ -1,3 +1,4 @@
+-- Destination Depots --
 WITH hub_mapping AS (
     SELECT * FROM (VALUES
         ('CHICAGO', 'CHIIL', 'IL', 'Chicago'),
@@ -23,6 +24,8 @@ WITH hub_mapping AS (
         ('DEN1', 'AURCO', 'CO', 'Denver')
         ) AS t(hub, destination_depot, state, city)
     ),
+
+-- Order Based Driver Table -- 
 driver_data AS (
     SELECT 
         DISTINCT COALESCE(external_employee_code,driver_code) AS combined_dc,
@@ -32,20 +35,21 @@ driver_data AS (
         RIGHT(COALESCE(external_employee_code, driver_code), 5) AS driver_code_suffix,
         hm.destination_depot,
         hellofresh_week,
-        obe.hub as obe_hub,
+        ord.hub as ord_hub,
         di.hub AS di_hub,
         hm.hub AS hm_hub
-    FROM US_OPS_ANALYTICS.FAREYE.ORDER_BASED_EVENT obe
+    FROM US_OPS_ANALYTICS.FAREYE.ORDER_BASED_EVENT ord
     LEFT JOIN US_OPS_ANALYTICS.FAREYE.DRIVER_INSPECTION di
         ON external_employee_code = driver_code
     LEFT JOIN us_ops_analytics.dimensions.date_dimension dd
         ON default_delivery_date = dd.date_string_backwards
      LEFT JOIN hub_mapping hm
         ON di.hub = LOWER(hm.hub)
-        OR obe.hub = LOWER(hm.hub)
+        OR ord.hub = LOWER(hm.hub)
     WHERE default_delivery_date >= DATEADD(week, -110, CURRENT_DATE())
 ),
 
+-- Mapping Logic -- 
 driver_agency_mapping AS (
     SELECT 
         dd.*,
@@ -55,15 +59,20 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'AURCO' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt AURCO'
 
         -- BNATN --
+        WHEN destination_depot = 'BNATN' AND driver_code_suffix = 'em_hf' THEN 'DSP-DropOff BNATN'
+        WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff BNATN'
+        WHEN destination_depot = 'BNATN' AND driver_code_suffix = 'd)_hf' THEN 'DSP-DropOff BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_g_hf' THEN 'DSP-Pace BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_p_hf' THEN 'DSP-Pace BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = 'p)_hf' THEN 'DSP-Pace BNATN'
+        WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt BNATN'
 
         -- BOSMA --
-        WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_c_hf' THEN 'DSP-Cornucopia'
-        WHEN destination_depot = 'BOSMA' and driver_code_suffix = 'c)_hf' THEN 'DSP-Cornucopia'
-        WHEN destination_depot = 'BOSMA' and driver_code_suffix = 'C)_hf' THEN 'DSP-Cornucopia'
+        WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_c_hf' AND hellofresh_week >= '2025-W30' THEN 'DSP-Chronim BOSMA'
+        WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_c_hf' AND hellofresh_week < '2025-W29' THEN 'DSP-Cornucopia'
+        WHEN destination_depot = 'BOSMA' and driver_code_suffix = 'C)_hf' AND hellofresh_week < '2025-W29' THEN 'DSP-Cornucopia'
+        WHEN destination_depot = 'BOSMA' and driver_code_suffix = 'c)_hf' AND hellofresh_week < '2025-W29' THEN 'DSP-Cornucopia'
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt BOSMA'
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry BOSMA'
 
@@ -78,9 +87,12 @@ driver_agency_mapping AS (
         -- DALTX --
         WHEN destination_depot = 'DALTX' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff'
         when destination_depot = 'DALTX' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt DALTX'
+        WHEN destination_depot = 'DALTX' and driver_code_suffix = '_c_hf' THEN 'DSP-Chronim DALTX'
 
         -- FAINJ --
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff FAINJ'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'lb_hf' THEN 'DSP-DropOff FAINJ'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'zl_hf' THEN 'DSP-NetZero'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '_u_hf' THEN 'DSP-UltimateLogistics'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u__hf' THEN 'DSP-UltimateLogistics'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u)_hf' THEN 'DSP-UltimateLogistics'
@@ -90,6 +102,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'FTLFL' AND driver_code_suffix = '_d_hf' AND hellofresh_week >='2025-W08' THEN 'DSP-DropOff FTLFL'
 
         -- KANMO --
+        WHEN destination_depot = 'KANMO' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt KANMO'
         WHEN destination_depot = 'KANMO' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry KANMO'
         
         -- LEWOH -- 
@@ -108,6 +121,7 @@ driver_agency_mapping AS (
         -- MINMN --
         WHEN destination_depot = 'MINMN' AND driver_code_suffix = '_w_hf' THEN 'DSP-Winnesota'
         WHEN destination_depot = 'MINMN' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt MINMN'
+        WHEN destination_depot = 'MINMN' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority MINMN'
         
         -- PITPA --
         WHEN destination_depot = 'PITPA' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff PITPA'
@@ -116,6 +130,9 @@ driver_agency_mapping AS (
         
         -- RCHNY --
         WHEN destination_depot = 'RCHNY' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff RCHNY'
+        WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'dr_hf' THEN 'DSP-DropOff RCHNY'
+        WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'db_hf' THEN 'DSP-DropOff RCHNY'
+        WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'ds_hf' THEN 'DSP-DropOff RCHNY'
         WHEN destination_depot = 'RCHNY' and driver_code_suffix = '_r_hf' THEN 'DSP-DropOff RCHNY'
         
         -- SCIUT --
@@ -139,6 +156,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'SUNMO' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt SUNMO'
         
         -- TOLAZ --
+        WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim TOLAZ'
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry'
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff TOLAZ'
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt TOLAZ'
@@ -158,14 +176,15 @@ driver_agency_mapping AS (
         WHEN driver_code_suffix = 't)_hf' THEN 'Trillium'
         WHEN driver_code_suffix = '_t_hf' THEN 'Trillium'
         WHEN driver_code_suffix = 't__hf' THEN 'Trillium'
-        
+
         -- GIG --
-        WHEN combined_dc LIKE '%_hf' AND (carrier_code IN ('ROADIE','UBER')) THEN 'TestUser'
-        WHEN carrier_code = 'ROADIE' THEN 'GIG-ROADIE'
-        WHEN carrier_code = 'UBER' THEN 'GIG-UBER'
+        WHEN combined_dc LIKE '%.' AND carrier_code = 'ROADIE' THEN 'GIG-ROADIE'
+        WHEN combined_dc LIKE '%.' AND carrier_code = 'UBER' THEN 'GIG-UBER'
 
         -- NonPeriod driver_codes being marked as GIG
-        WHEN combined_dc NOT LIKE '%.%' AND (carrier_code IN ('ROADIE','UBER')) THEN NULL
+        WHEN combined_dc LIKE '%_hf' AND (carrier_code IN ('ROADIE','UBER')) THEN 'TestUser'
+        WHEN combined_dc NOT LIKE '%.' AND carrier_code = 'ROADIE' THEN 'GIG-ROADIE'
+        WHEN combined_dc NOT LIKE '%.' AND carrier_code = 'UBER' THEN 'GIG-UBER'
 
         -- Test User -- 
         WHEN driver_code = 'mcistandbydriver_01_hf' THEN 'TestUser'
@@ -177,22 +196,36 @@ driver_agency_mapping AS (
         WHEN driver_code = 'tcdriver100_hf' THEN 'TestUser'
         ELSE null
     END AS driver_agency,
-    ROW_NUMBER() OVER (PARTITION BY external_employee_code, driver_code ORDER BY hellofresh_week ASC) AS rn
     FROM driver_data dd
-    )
+    ),
 
+-- Filtered Selection -- 
+filtered_mapping AS (
 SELECT
     combined_dc as driver_code,
-    -- external_employee_code AS driver_code,
-    -- driver_code AS driver_code_di,
-    -- driver_code_suffix,
     driver_agency,
     destination_depot,
-    -- obe_hub,
-    -- di_hub,
-    -- hm_hub,
-    hellofresh_week
+    hellofresh_week,
+    ROW_NUMBER() OVER (
+        PARTITION BY combined_dc, COALESCE(driver_agency, 'UNKNOWN'), destination_depot 
+        ORDER BY hellofresh_week ASC
+    ) AS rn
 FROM driver_agency_mapping
+WHERE combined_dc IS NOT NULL
+    AND (driver_agency IS NOT NULL OR NOT EXISTS (
+        SELECT 1 
+        FROM driver_agency_mapping d2 
+        WHERE d2.combined_dc = driver_agency_mapping.combined_dc 
+        AND d2.driver_agency IS NOT NULL
+    ))
+)
+
+-- Final Selection -- 
+SELECT
+    driver_code,
+    driver_agency,
+    destination_depot,
+    hellofresh_week
+FROM filtered_mapping
 WHERE rn = 1
-    AND combined_dc IS NOT NULL
 ORDER BY hellofresh_week ASC

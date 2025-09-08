@@ -1,4 +1,3 @@
--- Destination Depots --
 WITH hub_mapping AS (
     SELECT * FROM (VALUES
         ('CHICAGO', 'CHIIL', 'IL', 'Chicago'),
@@ -24,8 +23,6 @@ WITH hub_mapping AS (
         ('DEN1', 'AURCO', 'CO', 'Denver')
         ) AS t(hub, destination_depot, state, city)
     ),
-
--- Order Based Driver Table -- 
 driver_data AS (
     SELECT 
         DISTINCT COALESCE(external_employee_code,driver_code) AS combined_dc,
@@ -35,21 +32,20 @@ driver_data AS (
         RIGHT(COALESCE(external_employee_code, driver_code), 5) AS driver_code_suffix,
         hm.destination_depot,
         hellofresh_week,
-        ord.hub as ord_hub,
+        obe.hub as obe_hub,
         di.hub AS di_hub,
         hm.hub AS hm_hub
-    FROM US_OPS_ANALYTICS.FAREYE.ORDER_BASED_EVENT ord
+    FROM US_OPS_ANALYTICS.FAREYE.ORDER_BASED_EVENT obe
     LEFT JOIN US_OPS_ANALYTICS.FAREYE.DRIVER_INSPECTION di
         ON external_employee_code = driver_code
     LEFT JOIN us_ops_analytics.dimensions.date_dimension dd
         ON default_delivery_date = dd.date_string_backwards
      LEFT JOIN hub_mapping hm
         ON di.hub = LOWER(hm.hub)
-        OR ord.hub = LOWER(hm.hub)
+        OR obe.hub = LOWER(hm.hub)
     WHERE default_delivery_date >= DATEADD(week, -110, CURRENT_DATE())
 ),
 
--- Mapping Logic -- 
 driver_agency_mapping AS (
     SELECT 
         dd.*,
@@ -60,7 +56,6 @@ driver_agency_mapping AS (
 
         -- BNATN --
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = 'em_hf' THEN 'DSP-DropOff BNATN'
-        WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = 'd)_hf' THEN 'DSP-DropOff BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry BNATN'
         WHEN destination_depot = 'BNATN' AND driver_code_suffix = '_g_hf' THEN 'DSP-Pace BNATN'
@@ -194,12 +189,10 @@ driver_agency_mapping AS (
         WHEN driver_code = 'tcdriver100_hf' THEN 'TestUser'
         ELSE null
     END AS driver_agency,
-    -- ROW_NUMBER() OVER (PARTITION BY combined_dc, external_employee_code, driver_code ORDER BY hellofresh_week ASC) AS rn
+    ROW_NUMBER() OVER (PARTITION BY combined_dc, external_employee_code, driver_code ORDER BY hellofresh_week ASC) AS rn
     FROM driver_data dd
-    ),
+    )
 
--- Filtered Seletion -- 
-filtered_mapping AS (
 SELECT
     combined_dc as driver_code,
     -- external_employee_code AS driver_code,
@@ -207,25 +200,12 @@ SELECT
     -- driver_code_suffix,
     driver_agency,
     destination_depot,
-    -- ord_hub,
+    -- obe_hub,
     -- di_hub,
     -- hm_hub,
-    hellofresh_week,
-    ROW_NUMBER() OVER (PARTITION BY driver_agency, combined_dc,
-        destination_depot ORDER BY hellofresh_week ASC) AS rn
+    hellofresh_week
 FROM driver_agency_mapping
-WHERE --rn = 1 AND 
-    combined_dc IS NOT NULL
-)
-
--- Final Selection -- 
-SELECT
-    driver_code,
-    driver_agency,
-    destination_depot,
-    hellofresh_week,
-    rn
-FROM filtered_mapping
 WHERE rn = 1
--- QUALIFY row_number() OVER (PARTITION BY driver_code, driver_agency, destination_depot ORDER BY destination_depot ASC) = 1
-ORDER BY destination_depot ASC, hellofresh_week ASC, driver_code ASC
+    AND combined_dc IS NOT NULL
+    AND destination_depot = 'SMYGA'
+ORDER BY hellofresh_week ASC
