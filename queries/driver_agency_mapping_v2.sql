@@ -113,6 +113,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'MADMI' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff MADMI'
         WHEN destination_depot = 'MADMI' AND driver_code_suffix = '_p_hf' THEN 'DSP-PCSCourier'
         WHEN destination_depot = 'MADMI' AND driver_code_suffix = 'd)_hf' THEN 'DSP-DropOff MADMI'
+        WHEN destination_depot = 'MADMI' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim MADMI'
         
         -- MILOR -- 
         WHEN destination_depot = 'MILOR' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt MILOR'
@@ -154,6 +155,7 @@ driver_agency_mapping AS (
                 
         -- SUNMO --
         WHEN destination_depot = 'SUNMO' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt SUNMO'
+        WHEN destination_depot = 'SUNMO' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim SUNMO'
         
         -- TOLAZ --
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim TOLAZ'
