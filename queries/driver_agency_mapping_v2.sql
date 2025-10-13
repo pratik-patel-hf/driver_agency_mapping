@@ -77,25 +77,25 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry BOSMA'
 
         -- CHIIL -- 
-         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority'
-         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_y_hf' THEN 'DSP-DeliveryAuthority'
+         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority CHIIL'
+         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_y_hf' THEN 'DSP-DeliveryAuthority CHIIL'
 
          -- CLEOH -- 
          WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt CLEOH'
          WHEN destination_depot = 'CLEOH' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt CLEOH'
 
         -- DALTX --
-        WHEN destination_depot = 'DALTX' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff'
+        WHEN destination_depot = 'DALTX' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff DALTX'
         when destination_depot = 'DALTX' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt DALTX'
         WHEN destination_depot = 'DALTX' and driver_code_suffix = '_c_hf' THEN 'DSP-Chronim DALTX'
 
         -- FAINJ --
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff FAINJ'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'lb_hf' THEN 'DSP-DropOff FAINJ'
-        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'zl_hf' THEN 'DSP-NetZero'
-        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '_u_hf' THEN 'DSP-UltimateLogistics'
-        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u__hf' THEN 'DSP-UltimateLogistics'
-        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u)_hf' THEN 'DSP-UltimateLogistics'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'zl_hf' THEN 'DSP-NetZero FAINJ'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '_u_hf' THEN 'DSP-UltimateLogistics FAINJ'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u__hf' THEN 'DSP-UltimateLogistics FAINJ'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u)_hf' THEN 'DSP-UltimateLogistics FAINJ'
         
         -- FTLFL --
         WHEN destination_depot = 'FTLFL' AND driver_code_suffix = '_d_hf' AND hellofresh_week <'2025-W08' THEN 'DSP-DCALogistics'
@@ -164,7 +164,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'TOLAZ' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt TOLAZ'
         
         -- WDCMD -- 
-        WHEN destination_depot = 'WDCMD' AND driver_code_suffix = '_d_hf' THEN 'DSP-FalconExpress'
+        WHEN destination_depot = 'WDCMD' AND driver_code_suffix = '_d_hf' THEN 'DSP-FalconExpress WDCMD'
         
         -- Staffmark --
         WHEN driver_code_suffix = '_s_hf' THEN 'Staffmark'
