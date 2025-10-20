@@ -79,6 +79,7 @@ driver_agency_mapping AS (
         -- CHIIL -- 
          WHEN destination_depot = 'CHIIL' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority CHIIL'
          WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_y_hf' THEN 'DSP-DeliveryAuthority CHIIL'
+         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim CHIIL'
 
          -- CLEOH -- 
          WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt CLEOH'
