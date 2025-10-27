@@ -73,6 +73,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_c_hf' AND hellofresh_week < '2025-W29' THEN 'DSP-Cornucopia'
         WHEN destination_depot = 'BOSMA' and driver_code_suffix = 'C)_hf' AND hellofresh_week < '2025-W29' THEN 'DSP-Cornucopia'
         WHEN destination_depot = 'BOSMA' and driver_code_suffix = 'c)_hf' AND hellofresh_week < '2025-W29' THEN 'DSP-Cornucopia'
+        WHEN destination_depot = 'BOSMA' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority BOSMA'
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt BOSMA'
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry BOSMA'
 
@@ -121,11 +122,13 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'MILOR' and driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt MILOR'
         
         -- MINMN --
-        WHEN destination_depot = 'MINMN' AND driver_code_suffix = '_w_hf' THEN 'DSP-Winnesota'
+        WHEN destination_depot = 'MINMN' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim MINMN'
         WHEN destination_depot = 'MINMN' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt MINMN'
         WHEN destination_depot = 'MINMN' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority MINMN'
+        WHEN destination_depot = 'MINMN' AND driver_code_suffix = '_w_hf' THEN 'DSP-Winnesota'
         
         -- PITPA --
+        WHEN destination_depot = 'PITPA' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim PITPA'
         WHEN destination_depot = 'PITPA' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff PITPA'
         WHEN destination_depot = 'PITPA' AND driver_code_suffix = '_f_hf' AND hellofresh_week < '2025-W04' THEN 'DSP-FrontDoorCarrier'
         WHEN destination_depot = 'PITPA' AND driver_code_suffix = '_f_hf' AND hellofresh_week >= '2025-W04' THEN 'DSP-Frayt PITPA'
