@@ -43,7 +43,7 @@ driver_data AS (
         ON external_employee_code = driver_code
     LEFT JOIN us_ops_analytics.dimensions.date_dimension dd
         ON default_delivery_date = dd.date_string_backwards
-     LEFT JOIN hub_mapping hm
+    LEFT JOIN hub_mapping hm
         ON di.hub = LOWER(hm.hub)
         OR ord.hub = LOWER(hm.hub)
     WHERE default_delivery_date >= DATEADD(week, -110, CURRENT_DATE())
@@ -78,13 +78,13 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'BOSMA' AND driver_code_suffix = '_h_hf' THEN 'DSP-Hungry BOSMA'
 
         -- CHIIL -- 
-         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority CHIIL'
-         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_y_hf' THEN 'DSP-DeliveryAuthority CHIIL'
-         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim CHIIL'
+        WHEN destination_depot = 'CHIIL' AND driver_code_suffix = 'da_hf' THEN 'DSP-DeliveryAuthority CHIIL'
+        WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_y_hf' THEN 'DSP-DeliveryAuthority CHIIL'
+        WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim CHIIL'
 
-         -- CLEOH -- 
-         WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt CLEOH'
-         WHEN destination_depot = 'CLEOH' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt CLEOH'
+        -- CLEOH -- 
+        WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt CLEOH'
+        WHEN destination_depot = 'CLEOH' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt CLEOH'
 
         -- DALTX --
         WHEN destination_depot = 'DALTX' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff DALTX'
@@ -110,7 +110,7 @@ driver_agency_mapping AS (
         -- LEWOH -- 
         WHEN destination_depot = 'LEWOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt LEWOH'
         WHEN destination_depot = 'LEWOH' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt LEWOH'
-                
+        
         -- MADMI --
         WHEN destination_depot = 'MADMI' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff MADMI'
         WHEN destination_depot = 'MADMI' AND driver_code_suffix = '_p_hf' THEN 'DSP-PCSCourier'
