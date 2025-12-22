@@ -85,6 +85,7 @@ driver_agency_mapping AS (
         -- CLEOH -- 
         WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt CLEOH'
         WHEN destination_depot = 'CLEOH' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt CLEOH'
+        --WHEN destination_depot = 'CLEOH' AND combined_dc LIKE '%.' AND carrier_code = 'ROADIE' THEN 'DSP-Frayt CLEOH'
 
         -- DALTX --
         WHEN destination_depot = 'DALTX' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff DALTX'
@@ -138,6 +139,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'dr_hf' THEN 'DSP-DropOff RCHNY'
         WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'db_hf' THEN 'DSP-DropOff RCHNY'
         WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'ds_hf' THEN 'DSP-DropOff RCHNY'
+        WHEN destination_depot = 'RCHNY' AND driver_code_suffix = 'dg_hf' THEN 'DSP-DropOff RCHNY'
         WHEN destination_depot = 'RCHNY' and driver_code_suffix = '_r_hf' THEN 'DSP-DropOff RCHNY'
         
         -- SCIUT --
