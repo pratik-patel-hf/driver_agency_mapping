@@ -97,6 +97,7 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'lb_hf' THEN 'DSP-DropOff FAINJ'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'zl_hf' THEN 'DSP-NetZero FAINJ'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'mc_hf' THEN 'DSP-M2C FAINJ'
+        WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '2c_hf' THEN 'DSP-M2C FAINJ'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = '_u_hf' THEN 'DSP-UltimateLogistics FAINJ'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u__hf' THEN 'DSP-UltimateLogistics FAINJ'
         WHEN destination_depot = 'FAINJ' AND driver_code_suffix = 'u)_hf' THEN 'DSP-UltimateLogistics FAINJ'
