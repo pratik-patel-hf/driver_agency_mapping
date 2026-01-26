@@ -146,6 +146,7 @@ driver_agency_mapping AS (
         
         -- SCIUT --
         WHEN destination_depot = 'SCIUT' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt SCIUT'
+        WHEN destination_depot = 'SCIUT' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim SCIUT'
         
         -- SMYGA --
         WHEN destination_depot = 'SMYGA' AND driver_code_suffix = '_a_hf' THEN 'DSP-ATLCourier'
