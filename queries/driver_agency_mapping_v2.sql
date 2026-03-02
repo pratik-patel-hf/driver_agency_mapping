@@ -83,9 +83,10 @@ driver_agency_mapping AS (
         WHEN destination_depot = 'CHIIL' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim CHIIL'
 
         -- CLEOH -- 
+        WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_c_hf' THEN 'DSP-Chronim CLEOH'
         WHEN destination_depot = 'CLEOH' AND driver_code_suffix = '_f_hf' THEN 'DSP-Frayt CLEOH'
         WHEN destination_depot = 'CLEOH' AND driver_code_suffix = 'f)_hf' THEN 'DSP-Frayt CLEOH'
-        --WHEN destination_depot = 'CLEOH' AND combined_dc LIKE '%.' AND carrier_code = 'ROADIE' THEN 'DSP-Frayt CLEOH'
+        WHEN destination_depot = 'CLEOH' AND combined_dc LIKE '%.' AND carrier_code = 'FRAYT' THEN 'DSP-Frayt CLEOH'
 
         -- DALTX --
         WHEN destination_depot = 'DALTX' AND driver_code_suffix = '_d_hf' THEN 'DSP-DropOff DALTX'
@@ -239,4 +240,5 @@ SELECT
     hellofresh_week
 FROM filtered_mapping
 WHERE rn = 1
+    AND driver_agency NOT IN ('GIG-ROADIE', 'GIG-UBER')
 ORDER BY hellofresh_week ASC
